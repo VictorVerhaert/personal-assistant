@@ -1,0 +1,19 @@
+{
+  "name": "personal-assistant",
+  "description": "Context-efficient personal assistant for VS Code Copilot. A powerful lead delegates research, repository exploration, edits, and review to versatile subagents.",
+  "version": "1.0.0",
+  "author": {
+    "name": "VictorVerhaert"
+  },
+  "license": "MIT",
+  "keywords": [
+    "personal-assistant",
+    "delegation",
+    "subagent",
+    "context-engineering",
+    "minimal-code"
+  ],
+  "agents": ["./agents"],
+  "skills": ["./skills"],
+  "mcpServers": ".mcp.json"
+}
