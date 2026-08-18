@@ -2,7 +2,7 @@
 description: "Bounded implementation and execution subagent. Use for named-file edits, builds, test suites, arbitrary scripts, mechanical multi-file changes, and targeted validation after the lead defines scope and acceptance criteria."
 name: "Repository Worker"
 model: ["GPT-5.6 Terra (copilot)", "Claude Sonnet 5 (copilot)"]
-tools: [vscode/runCommand, vscode/askQuestions, vscode/toolSearch, execute, read, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/installPythonPackage, ms-python.python/configurePythonEnvironment, ms-toolsai.jupyter/configureNotebook, ms-toolsai.jupyter/listNotebookPackages, ms-toolsai.jupyter/installNotebookPackages, edit, search, web, browser, vscodeGeneral/toolSearch, todo]
+tools: [vscode/runCommand, vscode/askQuestions, execute, read, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/installPythonPackage, ms-python.python/configurePythonEnvironment, ms-toolsai.jupyter/configureNotebook, ms-toolsai.jupyter/listNotebookPackages, ms-toolsai.jupyter/installNotebookPackages, edit, search, web, browser, vscodeGeneral/toolSearch, todo]
 user-invocable: false
 ---
 

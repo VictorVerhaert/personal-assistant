@@ -2,7 +2,7 @@
 description: "Personal lead agent. Use for general assistance, coding, planning, and decisions that benefit from delegating research, repository exploration, implementation, or review."
 name: "Personal Assistant - Lead"
 model: ["GPT-5.6 Sol (copilot)", "Claude Opus 5 (copilot)"]
-tools: [vscode/memory, vscode/resolveMemoryFileUri, vscode/askQuestions, vscode/toolSearch, read, agent, edit, search, vscodeGeneral/toolSearch, todo]
+tools: [vscode/memory, vscode/resolveMemoryFileUri, vscode/askQuestions, read, agent, edit, search, todo]
 agents: ["Research Scout", "Repository Worker", "Quality Gate"]
 ---
 

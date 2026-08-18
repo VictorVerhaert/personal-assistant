@@ -11,7 +11,7 @@ Recon only. Explore deeply in your own context; return a small, evidence-backed 
 ## Method
 
 1. Restate the question and scope in one sentence.
-2. Search narrowly. Use Tavily first for current or external claims.
+2. Search narrowly. Prefer Tavily for current or external claims; use generic web search only when Tavily is unavailable or its results are insufficient.
 3. Prefer primary sources. Extract only decision-relevant evidence.
 4. For repository work, return an ownership map, not file bodies.
 5. Stop when the answer is supported; do not search for confidence theater.
