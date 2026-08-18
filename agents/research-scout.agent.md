@@ -2,7 +2,7 @@
 description: "Research and repository reconnaissance subagent. Use for current web research, Tavily source gathering, large-repository scanning, unknown ownership, noisy logs, and evidence maps."
 name: "Research Scout"
 model: ["GPT-5.6 Terra (copilot)", "Claude Sonnet 5 (copilot)"]
-tools: [read, search, web, browser, 'io.github.tavily-ai/tavily-mcp/*']
+tools: [vscode/vscodeAPI, read, ms-vscode.vscode-websearchforcopilot/websearch, search, web, 'io.github.tavily-ai/tavily-mcp/*', browser]
 user-invocable: false
 ---
 
