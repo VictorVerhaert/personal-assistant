@@ -9,9 +9,9 @@ Context-efficient personal assistant plugin for VS Code Copilot. A powerful lead
 | Personal Assistant - Lead | GPT-5.6 Sol -> Claude Opus 5 | Final decisions and validation | General work and coordination |
 | Research Scout | GPT-5.6 Terra -> Claude Sonnet 5 | Read-only | Tavily research, large-repo scans, noisy output |
 | Repository Worker | GPT-5.6 Terra -> Claude Sonnet 5 | Named files only | Bounded edits and focused tests |
-| Quality Gate | GPT-5.6 Terra -> Claude Sonnet 5 | Read-only | Post-change correctness, security, and minimal-code review |
+| Quality Gate | GPT-5.6 Sol -> Claude Opus 5 | Read-only | Fresh-context correctness, security, and minimal-code review |
 
-`GPT-5.6 Terra` is the Copilot model classed as versatile. `GPT-5.6 Sol` and `Claude Opus 5` are powerful. The lead uses the powerful pair; workers use the versatile pair to preserve lead context and control cost.
+`GPT-5.6 Terra` is the Copilot model classed as versatile. `GPT-5.6 Sol` and `Claude Opus 5` are powerful. Implementation and research use the versatile pair to control cost. The powerful pair handles final decisions and independent review, where deeper reasoning has the highest leverage.
 
 ## Routing
 
@@ -19,9 +19,9 @@ The lead delegates external facts, unknown or broad repository discovery, more t
 
 All builds, test suites, and arbitrary scripts run through **Repository Worker** on the versatile model pair. It tries the narrowest documented command, permits two setup or recovery attempts, and returns `BLOCKED` for interactive input, credentials, unavailable services, undeclared downloads, permission changes, or 120 seconds without useful output. The lead directs the next action; it does not consume context retrying shell work.
 
-For non-trivial changes, the bounded loop is `Worker change and validate -> Quality Gate review -> Worker repair and revalidate -> Quality Gate re-review`. It permits two worker-validation cycles, then escalates with evidence. This is loop engineering applied as a bounded evaluator loop, not an autonomous background process.
+For non-trivial changes, the bounded loop is `Worker change and validate -> Quality Gate review -> Worker repair and revalidate -> Quality Gate re-review`. The Lead sends intent, acceptance criteria, changed paths, risk focus, and validation results, not a copied diff. Quality Gate retrieves repository status and expands only relevant hunks in a fresh context. It permits two worker-validation cycles, then escalates with evidence.
 
-The package carries the caveman communication style, ponytail minimal-code ladder, repository memory, VS Code todo tracking, explicit confirmation for consequential actions, focused validation, and a Quality Gate after non-trivial changes.
+The package carries the caveman communication style, a minimal-code ladder, repository memory, VS Code todo tracking, explicit confirmation for consequential actions, focused validation, and a Quality Gate after non-trivial changes.
 
 ## Commands
 
