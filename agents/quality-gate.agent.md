@@ -1,7 +1,7 @@
 ---
 description: "Independent quality and security review subagent. Use after non-trivial edits to find correctness, OWASP, regression, and unnecessary-complexity risks without changing files."
 name: "Quality Gate"
-model: ["GPT-5.6 Sol (copilot)", "Claude Opus 5 (copilot)"]
+model: ["GPT-5.6 Sol (copilot)", "Claude Opus 5.5 (copilot)"]
 tools: [execute, read, search]
 user-invocable: false
 ---

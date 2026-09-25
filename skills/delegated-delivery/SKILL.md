@@ -11,7 +11,7 @@ Lead owns scope and final proof. Workers do bounded execution.
 1. Create a VS Code todo list for multi-step work.
 2. Ask only questions that change the plan.
 3. Use Repo Recon if ownership is unknown.
-4. Give Repository Worker named files, acceptance criteria, and one focused check; it owns builds, tests, and scripts and applies its built-in Minimal Code ladder.
+4. Give Repository Worker named files, acceptance criteria, and one focused check; it owns all builds, test suites, and script execution and applies its built-in Minimal Code ladder.
 5. Read scoped changed files and Worker validation result; Quality Gate owns diff inspection.
 6. For non-trivial changes, invoke Quality Gate with goal, acceptance criteria, worker-reported changed files, risk focus, and validation result. Never paste the diff; the reviewer retrieves and scopes it locally.
 7. Allow one Worker repair cycle for BLOCKER or NEEDS CHANGES, then re-review. Escalate after the second cycle.

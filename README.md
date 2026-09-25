@@ -6,10 +6,10 @@ Context-efficient personal assistant plugin for VS Code Copilot. A powerful lead
 
 | Agent | Models | Authority | Use |
 | --- | --- | --- | --- |
-| Personal Assistant - Lead | GPT-5.6 Sol -> Claude Opus 5 | Final decisions and validation | General work and coordination |
+| Personal Assistant - Lead | Claude Opus 5.5 -> GPT-5.6 Sol | Final decisions, bounded Git diagnostics, and validation | General work and coordination |
 | Research Scout | GPT-5.6 Terra -> Claude Sonnet 5 | Read-only | Tavily research, large-repo scans, noisy output |
 | Repository Worker | GPT-5.6 Terra -> Claude Sonnet 5 | Named files only | Bounded edits and focused tests |
-| Quality Gate | GPT-5.6 Sol -> Claude Opus 5 | Read-only | Fresh-context correctness, security, and minimal-code review |
+| Quality Gate | GPT-5.6 Sol -> Claude Opus 5.5 | Read-only | Fresh-context correctness, security, and minimal-code review |
 
 `GPT-5.6 Terra` is the Copilot model classed as versatile. `GPT-5.6 Sol` and `Claude Opus 5` are powerful. Implementation and research use the versatile pair to control cost. The powerful pair handles final decisions and independent review, where deeper reasoning has the highest leverage.
 
@@ -36,7 +36,9 @@ The following packaged skills are the reusable slash-command workflows. Plugin m
 
 ## Install
 
-The folder is a complete plugin: `plugin.json` declares agents, skills, and the bundled Tavily MCP server. Add it to a Copilot plugin marketplace or load it as a local plugin directory, then reload Copilot custom agents. Select **Personal Assistant - Lead** in chat. Tavily prompts once for its API key when Research Scout first needs web research.
+The folder is a complete plugin: `plugin.json` declares agents and skills. Add it to a Copilot plugin marketplace or load it as a local plugin directory, then reload Copilot custom agents. Select **Personal Assistant - Lead** in chat.
+
+> **Highly recommended: install Tavily yourself.** The plugin does not bundle an MCP server. Research Scout uses the `io.github.tavily-ai/tavily-mcp` server; install it from the VS Code MCP gallery into your user `mcp.json`, where it prompts once for your API key. Without it, Scout falls back to generic web search.
 
 ## Validation
 
