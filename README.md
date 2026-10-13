@@ -6,18 +6,19 @@ Context-efficient personal assistant plugin for VS Code Copilot. A powerful lead
 
 | Agent | Models | Authority | Use |
 | --- | --- | --- | --- |
-| Personal Assistant - Lead | Claude Opus 5.5 -> GPT-5.6 Sol | Final decisions, bounded Git diagnostics, and validation | General work and coordination |
-| Research Scout | GPT-5.6 Terra -> Claude Sonnet 5 | Read-only | Tavily research, large-repo scans, noisy output |
-| Repository Worker | GPT-5.6 Terra -> Claude Sonnet 5 | Named files only | Bounded edits and focused tests |
-| Quality Gate | GPT-5.6 Sol -> Claude Opus 5.5 | Read-only | Fresh-context correctness, security, and minimal-code review |
+| Personal Assistant - Lead | Claude Opus 5.5 -> GPT-6.1 Sol | Final decisions, bounded Git diagnostics, and validation | General work and coordination |
+| Research Scout | GPT-6.1 Sol -> Claude Sonnet 5.5 | Read-only | Tavily research, large-repo scans, noisy output |
+| Repository Worker | Claude Sonnet 5.5 -> GPT-6.1 Sol | Named files only | Bounded edits and focused tests |
+| Quality Gate | GPT-6.1 Sol -> Claude Opus 5.5 | Read-only | Fresh-context correctness, security, and minimal-code review |
+| Quick Helper | Claude Haiku 5.5 | Named files; runs only provided scripts or verbatim commands | Cheap, fully specified repetitive tasks: log/entry scans, extraction, small mechanical edits |
 
-`GPT-5.6 Terra` is the Copilot model classed as versatile. `GPT-5.6 Sol` and `Claude Opus 5` are powerful. Implementation and research use the versatile pair to control cost. The powerful pair handles final decisions and independent review, where deeper reasoning has the highest leverage.
+Research and implementation use `GPT-6.1 Sol` and `Claude Sonnet 5.5`. `Claude Opus 5.5` and `GPT-6.1 Sol` handle final decisions and independent review, where deeper reasoning has the highest leverage. `Claude Haiku 5.5` takes cheap, fully specified bulk work.
 
 ## Routing
 
 The lead delegates external facts, unknown or broad repository discovery, more than two files or 200 lines of investigation, noisy output, and multi-file mechanical edits. It performs small known edits and final synthesis directly. Every subagent returns a compact evidence contract, never a raw transcript.
 
-All builds, test suites, and arbitrary scripts run through **Repository Worker** on the versatile model pair. It tries the narrowest documented command, permits two setup or recovery attempts, and returns `BLOCKED` for interactive input, credentials, unavailable services, undeclared downloads, permission changes, or 120 seconds without useful output. The lead directs the next action; it does not consume context retrying shell work.
+All builds, test suites, and arbitrary scripts run through **Repository Worker**. It tries the narrowest documented command, permits two setup or recovery attempts, and returns `BLOCKED` for interactive input, credentials, unavailable services, undeclared downloads, permission changes, or 120 seconds without useful output. The lead directs the next action; it does not consume context retrying shell work.
 
 For non-trivial changes, the bounded loop is `Worker change and validate -> Quality Gate review -> Worker repair and revalidate -> Quality Gate re-review`. The Lead sends intent, acceptance criteria, changed paths, risk focus, and validation results, not a copied diff. Quality Gate retrieves repository status and expands only relevant hunks in a fresh context. It permits two worker-validation cycles, then escalates with evidence.
 
@@ -48,7 +49,7 @@ The folder is a complete plugin: `plugin.json` declares agents and skills. Add i
 
 ## Research Basis
 
-- [GitHub Copilot models and pricing](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing): Sol is powerful; Terra is versatile; Sonnet 5 is versatile.
+- [GitHub Copilot models and pricing](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing): model tiers and multipliers behind each agent's model pair.
 - [Anthropic: Effective context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents): clean subagent context, compressed results, and selective context.
 - [Anthropic: Multi-agent research](https://www.anthropic.com/engineering/multi-agent-research-system): explicit delegation contracts, effort budgets, and small outcome-focused evaluations.
 - [Anthropic: Agent evals](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents): deterministic tests are the primary correctness grader for coding agents.
