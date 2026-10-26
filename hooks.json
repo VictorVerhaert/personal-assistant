@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "type": "command",
+        "matcher": "powershell|bash|read_powershell|read_bash|grep|glob|rg|web_fetch",
+        "bash": "node \"${PLUGIN_ROOT}/scripts/trim-output.js\"",
+        "powershell": "node \"${PLUGIN_ROOT}/scripts/trim-output.js\"",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}

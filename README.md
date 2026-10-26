@@ -1,59 +1,43 @@
 # personal-assistant
 
-Context-efficient personal assistant plugin for VS Code Copilot. A powerful lead keeps intent, decisions, and verification; versatile subagents absorb source gathering, large-repository exploration, bounded edits, and independent review.
+Context-efficient personal assistant plugin for VS Code Copilot. A strong lead owns intent, decisions, and verification and keeps its context small; cheaper subagents do the bulky work and return short evidence.
 
-## Architecture
+## Agents
 
-| Agent | Models | Authority | Use |
+| Agent | Models | Tools | Role |
 | --- | --- | --- | --- |
-| Personal Assistant - Lead | Claude Opus 5.5 -> GPT-6.1 Sol | Final decisions, bounded Git diagnostics, and validation | General work and coordination |
-| Research Scout | GPT-6.1 Sol -> Claude Sonnet 5.5 | Read-only | Tavily research, large-repo scans, noisy output |
-| Repository Worker | Claude Sonnet 5.5 -> GPT-6.1 Sol | Named files only | Bounded edits and focused tests |
-| Quality Gate | GPT-6.1 Sol -> Claude Opus 5.5 | Read-only | Fresh-context correctness, security, and minimal-code review |
-| Quick Helper | Claude Haiku 5.5 | Named files; runs only provided scripts or verbatim commands | Cheap, fully specified repetitive tasks: log/entry scans, extraction, small mechanical edits |
+| Personal Assistant - Lead | Claude Opus 5.5 -> GPT-6.1 Sol | Ask, memory, skills, read, edit, delegate | Plans with the user, delegates, decides, checks |
+| Research Scout | GPT-6.1 Sol -> Claude Sonnet 5.5 | All (read-only by instruction) | Web research via built-in search and fetch, repository maps |
+| Repository Worker | Claude Sonnet 5.5 -> GPT-6.1 Sol | All | Named-file edits, builds, tests, scripts |
+| Quality Gate | GPT-6.1 Sol -> Claude Opus 5.5 | Read, search, shell, skills | Independent correctness, security, minimal-code review |
+| Quick Helper | Claude Haiku 5.5 | Read, search, edit, shell | Fully specified repetitive work |
 
-Research and implementation use `GPT-6.1 Sol` and `Claude Sonnet 5.5`. `Claude Opus 5.5` and `GPT-6.1 Sol` handle final decisions and independent review, where deeper reasoning has the highest leverage. `Claude Haiku 5.5` takes cheap, fully specified bulk work.
+Scout and Worker get every tool, so MCP servers you add are available to them in new sessions.
 
-## Routing
+## How It Works
 
-The lead delegates external facts, unknown or broad repository discovery, more than two files or 200 lines of investigation, noisy output, and multi-file mechanical edits. It performs small known edits and final synthesis directly. Every subagent returns a compact evidence contract, never a raw transcript.
+- **User involvement:** no fixed upfront plan or approval gate. The lead asks multiple-choice questions (recommended option first) whenever a decision affects design, interfaces, data, security, or user-visible behavior, and checks in briefly after each slice. Answers go to a `decisions.md` session file that subagents read. Subagents return `QUESTION:` instead of guessing and `ASSUMED:` for low-risk choices.
+- **Delegation:** the lead delegates external facts, broad discovery, noisy output, builds, tests, and multi-file edits with named files and acceptance criteria. Subagents return capped summaries, never transcripts.
+- **Review loop:** Worker changes and validates; Quality Gate reviews in fresh context; at most two repair cycles, then escalate.
+- **Lean output:** caveman-style terse answers that keep negations, conditions, and uncertainty. Subagents are told reasoning is billed.
+- **Minimal code:** one ladder in the `minimal-code` skill: need it, reuse, stdlib, native, installed dependency, one line, minimum.
+- **Output trimming:** a `postToolUse` hook ([scripts/trim-output.js](scripts/trim-output.js)) cuts shell, search, and fetch output over 8000 characters to head, tail, and error lines, and saves the full output to a temp file.
 
-All builds, test suites, and arbitrary scripts run through **Repository Worker**. It tries the narrowest documented command, permits two setup or recovery attempts, and returns `BLOCKED` for interactive input, credentials, unavailable services, undeclared downloads, permission changes, or 120 seconds without useful output. The lead directs the next action; it does not consume context retrying shell work.
-
-For non-trivial changes, the bounded loop is `Worker change and validate -> Quality Gate review -> Worker repair and revalidate -> Quality Gate re-review`. The Lead sends intent, acceptance criteria, changed paths, risk focus, and validation results, not a copied diff. Quality Gate retrieves repository status and expands only relevant hunks in a fresh context. It permits two worker-validation cycles, then escalates with evidence.
-
-The package carries the caveman communication style, a minimal-code ladder, repository memory, VS Code todo tracking, explicit confirmation for consequential actions, focused validation, and a Quality Gate after non-trivial changes.
-
-## Commands
-
-The following packaged skills are the reusable slash-command workflows. Plugin manifests load skills directly; VS Code `.prompt.md` files are workspace/user customizations and are not a plugin manifest component.
+## Skills
 
 | Command | Purpose |
 | --- | --- |
-| `/delegated-research` | Current, source-backed research through Research Scout |
-| `/repo-recon` | Large-repository map without filling lead context |
+| `/delegated-research` | Source-backed research through Research Scout |
+| `/repo-recon` | Repository map without filling lead context |
 | `/delegated-delivery` | Bounded worker execution plus independent review |
 | `/minimal-code` | Minimal design, change, and review gate |
 
 ## Install
 
-The folder is a complete plugin: `plugin.json` declares agents and skills. Add it to a Copilot plugin marketplace or load it as a local plugin directory, then reload Copilot custom agents. Select **Personal Assistant - Lead** in chat.
+Load the folder as a local agent plugin or add it to a Copilot plugin marketplace, then select **Personal Assistant - Lead**. Requires Node.js for the hook.
 
-> **Highly recommended: install Tavily yourself.** The plugin does not bundle an MCP server. Research Scout uses the `io.github.tavily-ai/tavily-mcp` server; install it from the VS Code MCP gallery into your user `mcp.json`, where it prompts once for your API key. Without it, Scout falls back to generic web search.
+Built for the Copilot harness; the Local harness still works, without output replacement from the hook or `reasoning-effort`. Tool lists include both harness names; unknown names are ignored, so editor "unknown tool" warnings for `ask_user`, `store_memory`, or `skill` are expected before VS Code 1.144.
 
-## Validation
+Web research uses the harness's built-in web search and fetch tools; no MCP server or API key is needed.
 
-1. Ask the lead for a current technical recommendation: it should delegate to Research Scout and cite compact findings.
-2. Ask it to map an unfamiliar repository: Scout should return a short ownership map, not raw search output.
-3. Request a multi-file change: Repository Worker should receive named files and one focused check; Quality Gate should review the diff.
-
-## Research Basis
-
-- [GitHub Copilot models and pricing](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing): model tiers and multipliers behind each agent's model pair.
-- [Anthropic: Effective context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents): clean subagent context, compressed results, and selective context.
-- [Anthropic: Multi-agent research](https://www.anthropic.com/engineering/multi-agent-research-system): explicit delegation contracts, effort budgets, and small outcome-focused evaluations.
-- [Anthropic: Agent evals](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents): deterministic tests are the primary correctness grader for coding agents.
-- [OpenAI agent cookbook](https://developers.openai.com/cookbook/topic/agents): current orchestration, compaction, and evaluation references.
-- [OpenAI: Agent improvement loop](https://developers.openai.com/cookbook/examples/agents_sdk/agent_improvement_loop): connect traces, evaluation, and bounded harness improvements.
-- [VS Code custom agents](https://code.visualstudio.com/docs/copilot/customization/custom-agents): focused roles, minimal tools, and clear boundaries.
-- [GitHub Copilot plugins](https://docs.github.com/en/copilot/concepts/agents/about-plugins): portable agent, skill, and MCP packaging.
+**Lead context:** choose **Context: default** (200k) for Opus in the model picker; it persists as a preference.

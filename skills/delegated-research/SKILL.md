@@ -8,7 +8,7 @@ Delegate source gathering to Research Scout. Keep the lead context clean.
 
 ## Contract
 
-Give Scout the exact question, decision criteria, freshness requirement, and named sources when supplied. Scout searches Tavily first, prefers primary sources, and returns no raw tool output.
+Give Scout the exact question, decision criteria, freshness requirement, and named sources when supplied. Scout uses web search and fetch, prefers primary sources, and returns no raw tool output.
 
 ## Synthesis
 

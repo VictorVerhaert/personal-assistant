@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "tavily": {
-      "command": "npx",
-      "args": ["-y", "tavily-mcp@latest"],
-      "tools": ["*"]
-    }
-  }
-}
