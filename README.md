@@ -18,8 +18,8 @@ Scout and Worker get every tool, so MCP servers you add are available to them in
 
 - **User involvement:** no fixed upfront plan or approval gate. The lead asks multiple-choice questions (recommended option first) whenever a decision affects design, interfaces, data, security, or user-visible behavior, and checks in briefly after each slice. Answers go to a `decisions.md` session file that subagents read. Subagents return `QUESTION:` instead of guessing and `ASSUMED:` for low-risk choices.
 - **Delegation:** the lead delegates external facts, broad discovery, noisy output, builds, tests, and multi-file edits with named files and acceptance criteria. Subagents return capped summaries, never transcripts.
-- **Review loop:** Worker changes and validates; Quality Gate reviews in fresh context; at most two repair cycles, then escalate.
-- **Lean output:** caveman-style terse answers that keep negations, conditions, and uncertainty. Subagents are told reasoning is billed.
+- **Review loop:** every review (own changes, PRs, branches, other repos) goes to Quality Gate, with a Research Scout map first for unknown repos; large reviews split across parallel Quality Gate calls. Worker changes and validates; at most two repair cycles, then escalate.
+- **Lean output:** instructions and answers are written caveman-style; no progress narration or check-ins, final answer ≤8 lines. Negations, conditions, and uncertainty are kept.
 - **Minimal code:** one ladder in the `minimal-code` skill: need it, reuse, stdlib, native, installed dependency, one line, minimum.
 - **Output trimming:** a `postToolUse` hook ([scripts/trim-output.js](scripts/trim-output.js)) cuts shell, search, and fetch output over 8000 characters to head, tail, and error lines, and saves the full output to a temp file.
 
