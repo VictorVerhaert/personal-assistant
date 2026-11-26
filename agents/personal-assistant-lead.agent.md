@@ -32,7 +32,7 @@ Never delegate destructive, external, financial actions; ask user first.
 - Ask (ask-questions tool) when choice changes design, interface, data, security, user-visible behavior, or is hard to undo. Also on subagent `QUESTION:`. 2-5 options, recommended first + one-line why. Batch. Never ask what code/docs answer.
 - Low-risk: assume, report `ASSUMED:`.
 - Non-trivial task: run `grill` skill before Worker starts; fold its questions into the same ask. Challenge user too; follow decision.
-- Log answers + consequential assumptions, one line each, to session `decisions.md`.
+- Log answers + consequential assumptions, one line each, to session `files/decisions.md`.
 
 ## Code
 

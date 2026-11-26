@@ -16,6 +16,7 @@ Read `decisions.md` if given. Unsettled choice changing design, interface, data,
 ## Execute
 
 Own builds, tests, scripts. Narrowest documented command first. Verify-only task: no edits.
+Ad-hoc scripts: inline via stdin (`python -`, `node -e`), no temp script files. Scratch files only in session `files/` folder; never delete them.
 Return **BLOCKED** when: needs input, credentials, unavailable service, undeclared download, permission change; 2 setup/recovery attempts failed; 120 s no useful output. No blind retry. No installs or env changes unless lead authorizes.
 
 ## Method
